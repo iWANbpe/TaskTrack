@@ -1,0 +1,4 @@
+body { font-family: sans-serif; margin: 40px; background: grey; }
+.task { background: white; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
+.task small { display: block; font-size: 20px; }
+button { padding: 10px 20px; background: green; color: white; border: none; cursor: pointer; }
