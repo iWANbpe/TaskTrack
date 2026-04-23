@@ -16,7 +16,22 @@ config = load_config()
 def get_db_connection():
     conn = psycopg2.connect(**config['db'])
     return conn
+@app.route('/health/alive')
+def health_alive():
+    return "OK", 200
 
+@app.route('/health/ready')
+def health_ready():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT 1")
+        cur.close()
+        conn.close()
+        return "OK", 200
+    except Exception as e:
+        return f"Database connection failed: {str(e)}", 500
+  
 @app.route('/', methods=['GET'])
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
@@ -60,6 +75,65 @@ def add_task():
     else:
         return jsonify({"error": "Failed to insert task"}), 500
 
+@app.route('/tasks/<int:task_id>/status', methods=['POST'])
+def update_status(task_id):
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
+    cur.execute('SELECT status FROM tasks WHERE id = %s', (task_id,))
+    task = cur.fetchone()
+
+    if not task:
+        cur.close()
+        conn.close()
+        return jsonify({"error": "Task not found"}), 404
+
+    current = task['status']
+    if current == "Not started":
+        new_status = "Working on"
+    else:
+        new_status = "Done"
+
+    query = 'UPDATE tasks SET status = %s WHERE id = %s RETURNING id, title, status, created_at;'
+    cur.execute(query, (new_status, task_id))
+    updated_task = cur.fetchone()
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return jsonify(updated_task)
+
+@app.route('/tasks/delete/done', methods=['POST'])
+def delete_done_tasks():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM tasks WHERE status = 'Done';")
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"status": "success", "message": "Done tasks deleted"})
+
+@app.route('/tasks/<int:task_id>/delete', methods=['POST'])
+def delete_task_by_id(task_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM tasks WHERE id = %s;", (task_id,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"status": "success", "message": f"Task {task_id} deleted"})
+
+@app.route('/tasks/delete/all', methods=['POST'])
+def delete_all_tasks():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM tasks;")
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"status": "success", "message": "All tasks deleted"})
+    
 if __name__ == '__main__':
     app.run(
         host=config['web']['host'],

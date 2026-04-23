@@ -7,22 +7,40 @@
 <body>
     <h1>Task Track</h1>
     
+    <div id="status-bar" style="text-align: center; margin-bottom: 20px; font-style: italic;">
+          <small>Status: <span id="alive-status">Loading...</span> | Connection: <span id="ready-status">Loading...</span></small>
+    </div>
+    
     <div id="taskList">
         {% for task in tasks %}
         <div class="task">
             <h3>{{ task.title }}</h3>
-            <small>ID: {{ task.id }}</small>
-            <small>STATUS: {{ task.status }}</small>
+            <small class="task-id">ID: {{ task.id }}</small>
+            <small class="status-text">STATUS: {{ task.status }}</small>
             <small>CREATED AT: {{ task.created_at }}</small>
         </div>
         {% endfor %}
     </div>
     
-    <div style="margin-bottom: 20px;">
-        <input type="text" id="taskTitle" placeholder="Task title">
-        <button onclick="addTask()">Add task</button>
+    <div class="menu">
+        <div class="input-group">
+            <input type="text" id="taskTitle" placeholder="Task title">
+            <button onclick="addTask()">Add task</button>
+        </div>
+        
+        <div class="input-group">
+            <input type="number" id="taskIdInput" placeholder="Task id">
+            <button onclick="updateStatus()">Change status</button>
+            <button class="deleteButton" onclick="deleteTaskById()">Delete</button>
+        </div>
+
+        <div class="input-group">
+            <button onclick="deleteDoneTasks()">Clear done</button>
+            <button class="deleteButton" onclick="deleteAllTasks()">Clear all</button>
+        </div>
     </div>
     
+
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

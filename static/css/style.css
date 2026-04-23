@@ -1,4 +1,61 @@
-body { font-family: sans-serif; margin: 40px; background: grey; }
-.task { background: white; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
-.task small { display: block; font-size: 20px; }
-button { padding: 10px 20px; background: green; color: white; border: none; cursor: pointer; }
+body { 
+    font-family: sans-serif; 
+    margin: 40px; 
+    background: #f0f0f0; 
+}
+
+h1 { 
+    background: #57A65C; 
+    color: white; 
+    padding: 20px; 
+    border-radius: 15px; 
+    text-align: center;
+    font-style: italic;
+}
+
+.task { 
+    background: white; 
+    padding: 15px; 
+    margin-bottom: 10px; 
+    border: 3px solid #57A65C; 
+    border-radius: 15px; 
+}
+.task small { 
+    display: block; 
+    font-size: 16px; 
+}
+
+.menu { 
+    background: #e0e0e0; 
+    padding: 20px; 
+    border-radius: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+.input-group { 
+    display: flex; 
+    gap: 10px; 
+}
+
+input, button { 
+    padding: 12px; 
+    border-radius: 8px; 
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+input { flex: 1; }
+
+button { 
+    background: #57A65C; 
+    color: white; 
+    border: none; 
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+button.deleteButton { background: #D44D4D; }
+
+button:hover { opacity: 0.9; }
