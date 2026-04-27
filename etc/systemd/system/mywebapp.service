@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance for TaskTrack
+After=network.target
+
+[Service]
+User=Iwan
+Group=www-data
+WorkingDirectory=/home/Iwan/University/AppLabs/TaskTrack
+ExecStartPre=/bin/bash -c 'rm -f /home/Iwan/University/AppLabs/TaskTrack/mywebapp.sock'
+ExecStart=/home/Iwan/University/AppLabs/TaskTrack/.venv/bin/gunicorn --workers 3 --bind unix:/home/Iwan/University/AppLabs/TaskTrack/mywebapp.sock app:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
