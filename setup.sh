@@ -40,7 +40,7 @@ cp -r "$SCRIPT_DIR"/* "$TARGET_DIR/" || true
 cd "$TARGET_DIR"
 
 apt update
-apt install -y python3 python3-pip python3-venv nginx postgresql postgresql-contrib curl git
+apt install -y python3 python3-pip python3-venv nginx postgresql postgresql-contrib curl git libpq-dev
 
 rm -f /etc/sudoers.d/tasktrack_rules
 cat << 'EOF' > /etc/sudoers.d/tasktrack_rules
