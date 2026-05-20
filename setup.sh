@@ -71,9 +71,6 @@ sudo -i -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tasktrack_db TO my
 rm -rf "$TARGET_DIR/.venv"
 rm -f "$TARGET_DIR/mywebapp.sock"
 
-chown -R app:www-data "$TARGET_DIR"
-chmod -R 750 "$TARGET_DIR"
-
 sudo -u app python3 -m venv "$TARGET_DIR/.venv"
 sudo -u app "$TARGET_DIR/.venv/bin/pip" install --upgrade pip
 
@@ -82,6 +79,9 @@ if [ -f "$REQ_FILE" ]; then
     sudo -u app "$TARGET_DIR/.venv/bin/pip" install -r "$REQ_FILE"
 fi
 sudo -u app "$TARGET_DIR/.venv/bin/pip" install gunicorn
+
+chown -R app:www-data "$TARGET_DIR"
+chmod -R 750 "$TARGET_DIR"
 
 eval_dir="$TARGET_DIR"
 while [ "$eval_dir" != "/" ]; do
