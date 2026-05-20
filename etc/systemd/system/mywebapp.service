@@ -6,7 +6,7 @@ After=network.target
 User=Iwan
 Group=www-data
 WorkingDirectory=/home/student/University/AppLabs/TaskTrack
-ExecStartPre=/bin/bash -c 'rm -f /home/student/University/AppLabs/TaskTrack/mywebapp.sock'
+ExecStartPre=/bin/bash -c 'rm -f /home/student/TaskTrack/mywebapp.sock'
 ExecStart=/home/student/University/AppLabs/TaskTrack/.venv/bin/gunicorn --workers 3 --bind unix:/home/student/University/AppLabs/TaskTrack/mywebapp.sock app:app
 Restart=always
 
