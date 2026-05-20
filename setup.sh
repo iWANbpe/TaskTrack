@@ -18,7 +18,6 @@ DEFAULT_PASS="12345678"
 for user in "${users[@]}"; do
     if id "$user" &>/dev/null; then
         echo "User $user already exists."
-    
     else
         if getent group "$user" &>/dev/null; then
             useradd -m -g "$user" -s /bin/bash "$user"
@@ -71,14 +70,17 @@ sudo -i -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tasktrack_db TO my
 rm -rf "$TARGET_DIR/.venv"
 rm -f "$TARGET_DIR/mywebapp.sock"
 
-sudo -u app python3 -m venv "$TARGET_DIR/.venv"
-sudo -u app "$TARGET_DIR/.venv/bin/pip" install --upgrade pip
+chown -R root:root "$TARGET_DIR"
+chmod -R 755 "$TARGET_DIR"
+
+python3 -m venv "$TARGET_DIR/.venv"
+"$TARGET_DIR/.venv/bin/pip" install --upgrade pip
 
 REQ_FILE="$TARGET_DIR/etc/mywebapp/requiraments.txt"
 if [ -f "$REQ_FILE" ]; then
-    sudo -u app "$TARGET_DIR/.venv/bin/pip" install -r "$REQ_FILE"
+    "$TARGET_DIR/.venv/bin/pip" install -r "$REQ_FILE"
 fi
-sudo -u app "$TARGET_DIR/.venv/bin/pip" install gunicorn
+"$TARGET_DIR/.venv/bin/pip" install gunicorn
 
 chown -R app:www-data "$TARGET_DIR"
 chmod -R 750 "$TARGET_DIR"
