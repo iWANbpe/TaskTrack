@@ -18,8 +18,13 @@ DEFAULT_PASS="12345678"
 for user in "${users[@]}"; do
     if id "$user" &>/dev/null; then
         echo "User $user already exists."
+    
     else
-        useradd -m -s /bin/bash "$user"
+        if getent group "$user" &>/dev/null; then
+            useradd -m -g "$user" -s /bin/bash "$user"
+        else
+            useradd -m -s /bin/bash "$user"
+        fi
         echo "$user:$DEFAULT_PASS" | chpasswd
         passwd --expire "$user"
     fi
