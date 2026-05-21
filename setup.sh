@@ -119,4 +119,4 @@ if [ -n "$ORIGINAL_USER" ] && [ "$ORIGINAL_USER" != "student" ] && [ "$ORIGINAL_
     usermod -L "$ORIGINAL_USER"
 fi
 
-echo "Setuo done successfully!"
+echo "Setup done successfully!"
