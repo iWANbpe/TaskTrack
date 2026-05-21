@@ -19,11 +19,7 @@ for user in "${users[@]}"; do
     if id "$user" &>/dev/null; then
         echo "User $user already exists."
     else
-        if getent group "$user" &>/dev/null; then
-            useradd -m -g "$user" -s /bin/bash "$user"
-        else
-            useradd -m -s /bin/bash "$user"
-        fi
+        useradd -m -s /bin/bash "$user"
         echo "$user:$DEFAULT_PASS" | chpasswd
         passwd --expire "$user"
     fi
@@ -40,7 +36,7 @@ cp -r "$SCRIPT_DIR"/* "$TARGET_DIR/" || true
 cd "$TARGET_DIR"
 
 apt update
-apt install -y python3 python3-pip python3-venv nginx postgresql postgresql-contrib curl git libpq-dev
+apt install -y python3 python3-pip python3-venv nginx postgresql postgresql-contrib curl git
 
 rm -f /etc/sudoers.d/tasktrack_rules
 cat << 'EOF' > /etc/sudoers.d/tasktrack_rules
@@ -70,20 +66,23 @@ sudo -i -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tasktrack_db TO my
 rm -rf "$TARGET_DIR/.venv"
 rm -f "$TARGET_DIR/mywebapp.sock"
 
-chown -R root:root "$TARGET_DIR"
-chmod -R 755 "$TARGET_DIR"
+chown -R app:www-data "$TARGET_DIR"
+chmod -R 750 "$TARGET_DIR"
 
-python3 -m venv "$TARGET_DIR/.venv"
-"$TARGET_DIR/.venv/bin/pip" install --upgrade pip
+sudo -u app python3 -m venv "$TARGET_DIR/.venv"
+sudo -u app "$TARGET_DIR/.venv/bin/pip" install --upgrade pip
 
 REQ_FILE="$TARGET_DIR/etc/mywebapp/requiraments.txt"
 if [ -f "$REQ_FILE" ]; then
-    "$TARGET_DIR/.venv/bin/pip" install -r "$REQ_FILE"
+    sudo -u app "$TARGET_DIR/.venv/bin/pip" install -r "$REQ_FILE"
 fi
-"$TARGET_DIR/.venv/bin/pip" install gunicorn
+sudo -u app "$TARGET_DIR/.venv/bin/pip" install gunicorn
 
-chown -R app:www-data "$TARGET_DIR"
-chmod -R 750 "$TARGET_DIR"
+eval_dir="$TARGET_DIR"
+while [ "$eval_dir" != "/" ]; do
+    chmod o+x "$eval_dir"
+    eval_dir=$(dirname "$eval_dir")
+done
 
 if [ -f "$TARGET_DIR/migration.py" ]; then
     echo "Running database migrations..."
@@ -91,12 +90,6 @@ if [ -f "$TARGET_DIR/migration.py" ]; then
 else
     echo "Warning: migration.py not found, skipping."
 fi
-
-eval_dir="$TARGET_DIR"
-while [ "$eval_dir" != "/" ]; do
-    chmod o+x "$eval_dir"
-    eval_dir=$(dirname "$eval_dir")
-done
 
 cp "$TARGET_DIR/etc/systemd/system/mywebapp.service" /etc/systemd/system/mywebapp.service
 cp "$TARGET_DIR/etc/nginx/sites-available/mywebapp" /etc/nginx/sites-available/mywebapp
@@ -121,6 +114,9 @@ fi
 
 systemctl restart nginx
 
-if [ "$ORIGINAL_USER" != "root" ] && [ "$ORIGINAL_USER" != "student" ] && [ "$ORIGINAL_USER" != "teacher" ] && [ "$ORIGINAL_USER" != "operator" ]; then
+ORIGINAL_USER=${SUDO_USER}
+
+if [ -n "$ORIGINAL_USER" ] && [ "$ORIGINAL_USER" != "student" ] && [ "$ORIGINAL_USER" != "teacher" ] && [ "$ORIGINAL_USER" != "operator" ] && [ "$ORIGINAL_USER" != "root" ]; then
+    echo "Locking user: $ORIGINAL_USER"
     usermod -L "$ORIGINAL_USER"
 fi
