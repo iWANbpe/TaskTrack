@@ -44,7 +44,7 @@ TaskTrack — це веб-система для управління списк�
 * **Credentials:** Default users: `student`, `teacher`, `operator`. 
 * **Password:** `12345678` (for all accounts).
   
-* Для доступу з основного комп'ютера налаштуйте **Port Forwarding**
+Для доступу з основного комп'ютера налаштуйте **Port Forwarding**
 | Name | Protocol | Host Port | Guest Port | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
 | HTTP | TCP | 8080 | 80 | Web Application |
