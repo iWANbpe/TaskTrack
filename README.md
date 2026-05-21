@@ -47,8 +47,8 @@ TaskTrack — це веб-система для управління списк�
 * Для доступу з основного комп'ютера налаштуйте **Port Forwarding**:
 | Name | Protocol | Host Port | Guest Port | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
-| **HTTP** | TCP | `8080` | `80` | Web Application |
-| **SSH** | TCP | `2222` | `22` | SSH Access |
+| `HTTP` | TCP | `8080` | `80` | Web Application |
+| `*SSH` | TCP | `2222` | `22` | SSH Access |
 
 ### Автоматизація
 1. Клонуйте репозиторій: `git clone -b lab_1 URL_репозиторію`.
