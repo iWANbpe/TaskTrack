@@ -41,9 +41,8 @@ TaskTrack — це веб-система для управління списк�
 
   ### Доступ
 * Встановіть SSH-сервер всередині віртуальної машини:
-   ```bash
-   sudo apt update && sudo apt install openssh-server -y
-   sudo systemctl enable ssh && sudo systemctl restart ssh
+   `sudo apt update && sudo apt install openssh-server -y`
+   `sudo systemctl enable ssh && sudo systemctl restart ssh`
    
 * **SSH Access:** `ssh -p 2222 student@127.0.0.1` 
 * **Credentials:** Default users: `student`, `teacher`, `operator`. 
