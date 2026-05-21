@@ -53,7 +53,7 @@ chmod 0440 /etc/sudoers.d/tasktrack_rules
 visudo -c -f /etc/sudoers.d/tasktrack_rules
 
 echo "$VARIANT_N" > /home/student/gradebook
-chown student:student /home/student/gradebook
+chown student:users /home/student/gradebook
 chmod 644 /home/student/gradebook
 
 systemctl start postgresql
