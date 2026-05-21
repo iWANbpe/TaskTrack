@@ -52,7 +52,7 @@ TaskTrack — це веб-система для управління списк�
 | SSH | TCP | 2222 | 22 | SSH Access |
 
 ### Автоматизація
-1. Клонуйте репозиторій: `git clone -b lab_1 https://github.com/iWANbpe/TaskTrack.git`.
+1. Клонуйте репозиторій(обов'язково саме гілку lab_1): `git clone -b lab_1 https://github.com/iWANbpe/TaskTrack.git`.
 2. Перейдіть в теку проекту: `cd TaskTrack`
 3. Запустіть скрипт встановлення: `chmod +x setup.sh && sudo ./setup.sh`.
 4. Сервіс доступний за посиланням [http://127.0.0.1:8080/](http://127.0.0.1:8080/) що можна відкрити з браузера на вашій основній ОС.
