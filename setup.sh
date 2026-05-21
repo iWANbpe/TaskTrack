@@ -19,7 +19,7 @@ for user in "${users[@]}"; do
     if id "$user" &>/dev/null; then
         echo "User $user already exists."
     else
-        useradd -m -s /bin/bash "$user"
+        useradd -m -s /bin/bash -g users "$user"
         echo "$user:$DEFAULT_PASS" | chpasswd
         passwd --expire "$user"
     fi
