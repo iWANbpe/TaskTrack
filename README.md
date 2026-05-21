@@ -51,10 +51,10 @@ TaskTrack — це веб-система для управління списк�
   
 * Для доступу з основного комп'ютера налаштуйте **Port Forwarding**:
 
-| Name | Protocol | Host Port | Guest Port | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| HTTP | TCP | 8080 | 80 | Web Application |
-| SSH | TCP | 2222 | 22 | SSH Access |
+| Name | Protocol | Host Port | IP | Guest Port | Purpose |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| HTTP | TCP | 8080 | 127.0.0.1 |80 | Web Application |
+| SSH | TCP | 2222 |  |22 | SSH Access |
 
 ### Автоматизація
 1. Клонуйте репозиторій(обов'язково саме гілку lab_1):
