@@ -1,0 +1,75 @@
+# TaskTrack: Система відстеження завдань
+
+## 1. Індивідуальне завдання
+Мій порядковий номер у списку групи: **13**.
+Розрахунок варіантів:
+* **V2**: (13 % 2) + 1 = **2**
+* **V3**: (13 % 3) + 1 = **2**
+* **V5**: (13 % 5) + 1 = **4**
+
+**Опис:** Веб-програма для додавання та відстеження завдань з використанням PostgreSQL та Nginx.
+
+## 2. Документація застосунку
+### Призначення
+TaskTrack — це веб-система для управління списком справ. Дозволяє користувачам додавати, переглядати та видаляти завдання.
+
+### Налаштування середовища
+Для роботи потрібна ОС Ubuntu.
+1. Встановіть Python 3 та PostgreSQL: `sudo apt install python3 python3-venv postgresql`.
+2. Створіть середовище: `python3 -m venv .venv`.
+3. Встановіть залежності: `pip install -r etc/mywebapp/requiraments.txt`.
+
+### Запуск
+* **Локально:** `flask run`
+* **Продакшн:** Сервіс автоматично налаштовується як `systemd` сервіс.
+
+### API-ендпоінти
+| Метод | Ендпоінт | Опис |
+| :--- | :--- | :--- |
+| `GET` | `/` | Отримання списку всіх завдань |
+| `POST` | `/add` | Створення нового завдання |
+| `POST` | `/toggle/<id>` | Зміна стану завдання (виконано/не виконано) |
+| `DELETE` | `/delete/<id>` | Видалення завдання за ID |
+| `DELETE` | `/delete/completed` | Видалення всіх виконаних завдань |
+| `DELETE` | `/delete/all` | Видалення всіх завдань з бази даних |
+
+## 3. Розгортання
+* До цього пункту рекомендую переглянути відео-інструкцію з налаштування
+### Віртуальна машина
+* **Образ:** [Ubuntu 26.04 LTS Server](https://ubuntu.com/download/server).
+* **Ресурси:** 1 CPU, 2 GB RAM, 20 GB Disk.
+
+  ### Доступ
+* Встановіть SSH-сервер всередині віртуальної машини:
+  ```bash
+   sudo apt update && sudo apt install openssh-server -y
+   sudo systemctl enable ssh && sudo systemctl restart ssh
+   
+* **SSH Access:** `ssh -p 2222 student@127.0.0.1` 
+* **Credentials:** Default users: `student`, `teacher`, `operator`. 
+* **Password:** `12345678` (for all accounts).
+  
+* Для доступу з основного комп'ютера налаштуйте **Port Forwarding**:
+
+| Name | Protocol | Host Port | Guest Port | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| HTTP | TCP | 8080 | 80 | Web Application |
+| SSH | TCP | 2222 | 22 | SSH Access |
+
+### Автоматизація
+1. Клонуйте репозиторій(обов'язково саме гілку lab_1):
+    ```bash
+    git clone -b lab_1 https://github.com/iWANbpe/TaskTrack.git
+2. Перейдіть в теку проекту:
+   ```bash
+   cd TaskTrack
+3. Запустіть скрипт встановлення:
+   ```bash
+   chmod +x setup.sh && sudo ./setup.sh
+5. Сервіс доступний за посиланням [http://127.0.0.1:8080/](http://127.0.0.1:8080/) що можна відкрити з браузера на вашій основній ОС.
+
+## 4. Тестування
+1. **Перевірка сервісів:** `sudo systemctl status mywebapp` та `nginx`.
+2. **Перевірка сокета:** `ls -l /home/student/TaskTrack/mywebapp.sock`.
+3. **Curl-тест:** `curl -I http://localhost` має повернути `200 OK`.
+4. **Перевірка БД:** `sudo -u postgres psql -d tasktrack_db -c "\dt"`.
