@@ -114,6 +114,9 @@ fi
 
 systemctl restart nginx
 
-if [ "$ORIGINAL_USER" != "root" ] && [ "$ORIGINAL_USER" != "student" ] && [ "$ORIGINAL_USER" != "teacher" ] && [ "$ORIGINAL_USER" != "operator" ]; then
+ORIGINAL_USER=${SUDO_USER}
+
+if [ -n "$ORIGINAL_USER" ] && [ "$ORIGINAL_USER" != "student" ] && [ "$ORIGINAL_USER" != "teacher" ] && [ "$ORIGINAL_USER" != "operator" ] && [ "$ORIGINAL_USER" != "root" ]; then
+    echo "Locking user: $ORIGINAL_USER"
     usermod -L "$ORIGINAL_USER"
 fi
