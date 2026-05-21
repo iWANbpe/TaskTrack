@@ -85,6 +85,13 @@ fi
 chown -R app:www-data "$TARGET_DIR"
 chmod -R 750 "$TARGET_DIR"
 
+if [ -f "$TARGET_DIR/migration.py" ]; then
+    echo "Running database migrations..."
+    sudo -u app "$TARGET_DIR/.venv/bin/python3" "$TARGET_DIR/migration.py"
+else
+    echo "Warning: migration.py not found, skipping."
+fi
+
 eval_dir="$TARGET_DIR"
 while [ "$eval_dir" != "/" ]; do
     chmod o+x "$eval_dir"
