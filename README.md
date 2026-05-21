@@ -45,10 +45,10 @@ TaskTrack — це веб-система для управління списк�
 * **Password:** `12345678` (for all accounts).
   
 * Для доступу з основного комп'ютера налаштуйте **Port Forwarding**:
-| Name | Protocol | Host Port | Guest Port |
-| :--- | :--- | :--- | :--- |
-| **HTTP** | TCP | `8080` | `80` |
-| **SSH** | TCP | `2222` | `22` |
+| Name | Protocol | Host Port | Guest Port | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| **HTTP** | TCP | `8080` | `80` | Web Application |
+| **SSH** | TCP | `2222` | `22` | SSH Access |
 
 ### Автоматизація
 1. Клонуйте репозиторій: `git clone -b lab_1 URL_репозиторію`.
