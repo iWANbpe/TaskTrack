@@ -1,0 +1,13 @@
+{
+  "db": {
+    "dbname": "tasktrack_db",
+    "user": "myuser",
+    "password": "123456789",
+    "host": "db",
+    "port": "5432"
+  },
+  "web": {
+    "host": "0.0.0.0",
+    "port": 8000
+  }
+}

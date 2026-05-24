@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tasktrack_db
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: 123456789
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - tasktrack_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d tasktrack_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  webapp:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - tasktrack_net
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./etc/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/static:ro
+    depends_on:
+      - webapp
+    networks:
+      - tasktrack_net
+
+networks:
+  tasktrack_net:
+    driver: bridge
+
+volumes:
+  db_data:

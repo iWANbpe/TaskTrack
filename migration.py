@@ -3,7 +3,7 @@ import json
 import os
 
 def run_migration():
-    CONFIG_PATH = 'etc/mywebapp/config.json'
+    config_path = 'etc/mywebapp/config.json'
 
     with open(config_path, 'r') as f:
         config = json.load(f)
