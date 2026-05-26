@@ -33,7 +33,7 @@ TaskTrack — це веб-система для управління списк�
 | `DELETE` | `/delete/completed` | Видалення всіх виконаних завдань |
 | `DELETE` | `/delete/all` | Видалення всіх завдань з бази даних |
 
-## Розгортання через Docker Compose
+## 3. Розгортання через Docker Compose
  
 ### Вимоги
 * [Docker](https://docs.docker.com/get-docker/) 24+
@@ -51,22 +51,6 @@ TaskTrack — це веб-система для управління списк�
     ```
  
 3. Застосунок доступний за адресою [http://localhost](http://localhost)
-
-
-### Автоматизація
-1. Клонуйте репозиторій(обов'язково саме гілку lab_1):
-    ```bash
-    git clone -b lab_1 https://github.com/iWANbpe/TaskTrack.git
-    ```
-2. Перейдіть в теку проекту:
-   ```bash
-   cd TaskTrack
-   ```
-3. Запустіть скрипт встановлення:
-   ```bash
-   chmod +x setup.sh && sudo ./setup.sh
-   ```
-4. Сервіс доступний за посиланням [http://127.0.0.1:8080/](http://127.0.0.1:8080/) що можна відкрити з браузера на вашій основній ОС.
 
 ## 4. Тестування
 1. **Перевірка сервісів:** `sudo systemctl status mywebapp` та `nginx`.
