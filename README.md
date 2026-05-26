@@ -36,8 +36,7 @@ TaskTrack — це веб-система для управління списк�
 ## 3. Розгортання через Docker Compose
  
 ### Вимоги
-* [Docker](https://docs.docker.com/get-docker/) 24+
-* [Docker Compose](https://docs.docker.com/compose/) v2+
+* [Docker](https://docs.docker.com/get-docker/](https://docs.docker.com/engine/install/ubuntu/)
  
 1. Клонуйте репозиторій (гілка lab_2):
     ```bash
