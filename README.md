@@ -52,7 +52,22 @@ TaskTrack — це веб-система для управління списк�
  
 3. Застосунок доступний за адресою [http://localhost](http://localhost)
 
-## 4. Тестування
+### 4. Автоматизація
+1. Клонуйте репозиторій:
+    ```bash
+    git clone -b lab_2 https://github.com/iWANbpe/TaskTrack.git
+    ```
+2. Перейдіть в теку проекту:
+   ```bash
+   cd TaskTrack
+   ```
+3. Запустіть скрипт встановлення:
+   ```bash
+   chmod +x setup.sh && sudo ./setup.sh
+   ```
+4. Сервіс доступний за посиланням [http://127.0.0.1:8080/](http://127.0.0.1:8080/) що можна відкрити з браузера на вашій основній ОС.
+
+## 5. Тестування
 1. **Перевірка сервісів:** `sudo systemctl status mywebapp` та `nginx`.
 2. **Перевірка сокета:** `ls -l /home/student/TaskTrack/mywebapp.sock`.
 3. **Curl-тест:** `curl -I http://localhost` має повернути `200 OK`.
