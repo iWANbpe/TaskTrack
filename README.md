@@ -33,40 +33,40 @@ TaskTrack — це веб-система для управління списк�
 | `DELETE` | `/delete/completed` | Видалення всіх виконаних завдань |
 | `DELETE` | `/delete/all` | Видалення всіх завдань з бази даних |
 
-## 3. Розгортання
-* До цього пункту рекомендую переглянути [відео-інструкцію](https://drive.google.com/file/d/1E37xy3sN-wPfOX02lH1y_6iwX9W6855_/view?usp=sharing) з налаштування
-### Віртуальна машина
-* **Образ:** [Ubuntu 26.04 LTS Server](https://ubuntu.com/download/server).
-* **Ресурси:** 1 CPU, 2 GB RAM, 20 GB Disk.
+## Розгортання через Docker Compose
+ 
+### Вимоги
+* [Docker](https://docs.docker.com/get-docker/) 24+
+* [Docker Compose](https://docs.docker.com/compose/) v2+
+ 
+1. Клонуйте репозиторій (гілка lab_2):
+    ```bash
+    git clone -b lab_2 https://github.com/iWANbpe/TaskTrack.git
+    cd TaskTrack
+    ```
+ 
+2. Запустіть усі сервіси:
+    ```bash
+    docker compose up -d
+    ```
+ 
+3. Застосунок доступний за адресою [http://localhost](http://localhost)
 
-  ### Доступ
-* Встановіть SSH-сервер всередині віртуальної машини:
-  ```bash
-   sudo apt update && sudo apt install openssh-server -y
-   sudo systemctl enable ssh && sudo systemctl restart ssh
-   
-* **SSH Access:** `ssh -p 2222 student@127.0.0.1` 
-* **Credentials:** Default users: `student`, `teacher`, `operator`. 
-* **Password:** `12345678` (for all accounts).
-  
-* Для доступу з основного комп'ютера налаштуйте **Port Forwarding**:
-
-| Name | Protocol | Host Port | Guest Port | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| HTTP | TCP | 8080 | 80 | Web Application |
-| SSH | TCP | 2222 | 22 | SSH Access |
 
 ### Автоматизація
 1. Клонуйте репозиторій(обов'язково саме гілку lab_1):
     ```bash
     git clone -b lab_1 https://github.com/iWANbpe/TaskTrack.git
+    ```
 2. Перейдіть в теку проекту:
    ```bash
    cd TaskTrack
+   ```
 3. Запустіть скрипт встановлення:
    ```bash
    chmod +x setup.sh && sudo ./setup.sh
-5. Сервіс доступний за посиланням [http://127.0.0.1:8080/](http://127.0.0.1:8080/) що можна відкрити з браузера на вашій основній ОС.
+   ```
+4. Сервіс доступний за посиланням [http://127.0.0.1:8080/](http://127.0.0.1:8080/) що можна відкрити з браузера на вашій основній ОС.
 
 ## 4. Тестування
 1. **Перевірка сервісів:** `sudo systemctl status mywebapp` та `nginx`.
