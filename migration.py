@@ -1,6 +1,6 @@
 import psycopg2
 import json
-import os
+
 
 def run_migration():
     config_path = 'etc/mywebapp/config.json'
@@ -21,14 +21,15 @@ def run_migration():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         ''')
-        
+
         conn.commit()
         print("Migration done successfully!")
-        
+
         cur.close()
         conn.close()
     except Exception as e:
         print(f"Exception: {e}")
+
 
 if __name__ == '__main__':
     run_migration()
