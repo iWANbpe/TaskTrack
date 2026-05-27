@@ -1,0 +1,16 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+python_files = ["test_*.py"]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "tests/*",
+    "migration.py",
+    ".venv/*",
+    "setup.sh",
+]
+
+[tool.coverage.report]
+fail_under = 40
