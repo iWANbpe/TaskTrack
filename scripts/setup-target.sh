@@ -61,13 +61,52 @@ sudo systemctl enable nginx
 sudo systemctl restart nginx
 echo "Nginx configured."
 
-echo "Creating app directory..."
+echo "Creating app directory and config..."
 sudo mkdir -p /opt/tasktrack/static
 sudo chown -R "$USER":"$USER" /opt/tasktrack
-echo "App directory created."
+
+cat > /opt/tasktrack/config.json << 'EOF'
+{
+  "db": {
+    "dbname": "tasktrack_db",
+    "user": "myuser",
+    "password": "123456789",
+    "host": "127.0.0.1",
+    "port": "5432"
+  },
+  "web": {
+    "host": "0.0.0.0",
+    "port": 8000
+  }
+}
+EOF
+echo "App directory and config created."
+
+echo "Starting PostgreSQL container..."
+if docker ps -a --format '{{.Names}}' | grep -q '^tasktrack-db$'; then
+    echo "PostgreSQL container already exists, starting..."
+    docker start tasktrack-db || true
+else
+    docker run -d \
+        --name tasktrack-db \
+        --restart unless-stopped \
+        -e POSTGRES_DB=tasktrack_db \
+        -e POSTGRES_USER=myuser \
+        -e POSTGRES_PASSWORD=123456789 \
+        -p 5432:5432 \
+        postgres:16-alpine
+fi
+echo "PostgreSQL container started."
+
+echo "Configuring sudoers..."
+echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/systemctl, /usr/sbin/nginx" | \
+    sudo tee /etc/sudoers.d/tasktrack > /dev/null
+sudo chmod 0440 /etc/sudoers.d/tasktrack
+sudo visudo -c
+echo "Sudoers configured."
 
 echo "Installing systemd unit..."
-sudo tee /etc/systemd/system/tasktrack.service > /dev/null << 'EOF'
+sudo tee /etc/systemd/system/tasktrack.service > /dev/null << EOF
 [Unit]
 Description=TaskTrack Web Application
 After=network.target docker.service
@@ -75,14 +114,14 @@ Requires=docker.service
 
 [Service]
 Type=simple
-User=Iwan
+User=$USER
 Restart=on-failure
 RestartSec=5s
 ExecStartPre=-/usr/bin/docker stop tasktrack
 ExecStartPre=-/usr/bin/docker rm tasktrack
-ExecStart=/usr/bin/docker run --name tasktrack \
-    --network host \
-    -e DB_HOST=127.0.0.1 \
+ExecStart=/usr/bin/docker run --name tasktrack \\
+    --network host \\
+    -v /opt/tasktrack/config.json:/app/etc/mywebapp/config.json:ro \\
     ghcr.io/iwanbpe/tasktrack:stable
 ExecStop=/usr/bin/docker stop tasktrack
 
@@ -95,3 +134,4 @@ sudo systemctl enable tasktrack
 echo "Systemd unit installed."
 
 echo "=== Target node setup complete ==="
+echo "Run 'sudo systemctl start tasktrack' to start the application."
