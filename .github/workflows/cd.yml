@@ -33,7 +33,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/tasktrack
+          images: ghcr.io/iwanbpe/tasktrack
           tags: |
             type=sha,prefix=sha-,format=long,enable=${{ startsWith(github.ref, 'refs/heads/') }}
             type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/heads/') }}
@@ -68,7 +68,7 @@ jobs:
         env:
           TARGET_HOST: ${{ secrets.TARGET_HOST }}
           TARGET_USER: ${{ secrets.TARGET_USER }}
-          IMAGE: ghcr.io/${{ github.repository_owner }}/tasktrack:stable
+          IMAGE: ghcr.io/iwanbpe/tasktrack:stable
         run: |
           chmod +x scripts/deploy.sh
           bash scripts/deploy.sh
