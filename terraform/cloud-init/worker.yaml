@@ -24,7 +24,7 @@ users:
   - name: operator
     gecos: Operator for webapp and nginx
     shell: /bin/bash
-    passwd: "$6$rounds=656000$saltsalt$REPLACEME"
+    passwd: "$6$yAFnxkKe8qrMUBhk$Qipv7UBhmuy1K2aqeiPyUHDBVWa/frROJ7JkSmf7esWW.dyilslBJJoPotYORy5YkqgYg5GKr76o/pbovlS2.1"
     lock_passwd: false
 
   - name: app
