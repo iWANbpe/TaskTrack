@@ -1,0 +1,14 @@
+---
+# Database
+db_name: tasktrack_db
+db_user: myuser
+db_password: "123456789"
+db_port: 5432
+
+# Web application
+webapp_port: 8000
+webapp_user: app
+webapp_group: www-data
+webapp_dir: /opt/tasktrack
+webapp_repo: "https://github.com/iWANbpe/TaskTrack.git"
+webapp_branch: main

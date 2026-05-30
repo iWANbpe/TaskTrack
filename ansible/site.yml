@@ -1,0 +1,19 @@
+---
+- name: Common configuration for all VMs
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: Configure PostgreSQL on DB VM
+  hosts: db
+  become: true
+  roles:
+    - db
+
+- name: Deploy webapp and nginx on Worker VM
+  hosts: workers
+  become: true
+  roles:
+    - webapp
+    - nginx

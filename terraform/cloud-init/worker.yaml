@@ -1,0 +1,42 @@
+#cloud-config
+
+hostname: lab4-worker
+manage_etc_hosts: true
+
+users:
+  - name: ansible
+    gecos: Ansible automation user
+    groups: sudo
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - ${student_ssh_public_key}
+
+  - name: teacher
+    gecos: Teacher verification user
+    groups: sudo
+    shell: /bin/bash
+    # password: 12345678
+    passwd: "$6$yAFnxkKe8qrMUBhk$Qipv7UBhmuy1K2aqeiPyUHDBVWa/frROJ7JkSmf7esWW.dyilslBJJoPotYORy5YkqgYg5GKr76o/pbovlS2.1"
+    lock_passwd: false
+    sudo: ALL=(ALL:ALL) ALL
+
+  - name: operator
+    gecos: Operator for webapp and nginx
+    shell: /bin/bash
+    passwd: "$6$rounds=656000$saltsalt$REPLACEME"
+    lock_passwd: false
+
+  - name: app
+    gecos: Application service user
+    system: true
+    shell: /usr/sbin/nologin
+
+package_update: true
+package_upgrade: false
+
+packages:
+  - python3
+  - python3-pip
+  - python3-venv
+  - git

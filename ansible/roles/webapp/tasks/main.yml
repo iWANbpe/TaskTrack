@@ -1,0 +1,92 @@
+---
+- name: Install system dependencies
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-venv
+      - git
+      - acl
+    state: present
+    update_cache: true
+
+- name: Ensure app system user exists
+  ansible.builtin.user:
+    name: "{{ webapp_user }}"
+    system: true
+    shell: /usr/sbin/nologin
+    home: "{{ webapp_dir }}"
+    create_home: false
+
+- name: Ensure operator user exists
+  ansible.builtin.user:
+    name: operator
+    shell: /bin/bash
+    password: "{{ '12345678' | password_hash('sha512') }}"
+    update_password: on_create
+
+- name: Create webapp directory
+  ansible.builtin.file:
+    path: "{{ webapp_dir }}"
+    state: directory
+    owner: "{{ webapp_user }}"
+    group: "{{ webapp_group }}"
+    mode: "0755"
+
+- name: Clone application repository
+  ansible.builtin.git:
+    repo: "{{ webapp_repo }}"
+    dest: "{{ webapp_dir }}"
+    version: "{{ webapp_branch }}"
+    force: false
+  become_user: "{{ webapp_user }}"
+
+- name: Create Python virtual environment
+  ansible.builtin.command:
+    cmd: python3 -m venv {{ webapp_dir }}/.venv
+    creates: "{{ webapp_dir }}/.venv"
+  become_user: "{{ webapp_user }}"
+
+- name: Install Python dependencies
+  ansible.builtin.pip:
+    requirements: "{{ webapp_dir }}/etc/mywebapp/requiraments.txt"
+    virtualenv: "{{ webapp_dir }}/.venv"
+  become_user: "{{ webapp_user }}"
+
+- name: Install gunicorn
+  ansible.builtin.pip:
+    name: gunicorn
+    virtualenv: "{{ webapp_dir }}/.venv"
+  become_user: "{{ webapp_user }}"
+
+- name: Deploy application config from template
+  ansible.builtin.template:
+    src: config.json.j2
+    dest: "{{ webapp_dir }}/etc/mywebapp/config.json"
+    owner: "{{ webapp_user }}"
+    group: "{{ webapp_group }}"
+    mode: "0640"
+  notify: restart webapp
+
+- name: Deploy systemd service from template
+  ansible.builtin.template:
+    src: mywebapp.service.j2
+    dest: /etc/systemd/system/mywebapp.service
+    mode: "0644"
+  notify:
+    - reload systemd
+    - restart webapp
+
+- name: Ensure webapp service is enabled and started
+  ansible.builtin.systemd:
+    name: mywebapp
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Configure operator sudo rights
+  ansible.builtin.template:
+    src: sudoers_operator.j2
+    dest: /etc/sudoers.d/operator
+    mode: "0440"
+    validate: "visudo -cf %s"

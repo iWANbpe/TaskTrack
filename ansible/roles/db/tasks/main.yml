@@ -1,0 +1,63 @@
+---
+- name: Install PostgreSQL and dependencies
+  ansible.builtin.apt:
+    name:
+      - postgresql
+      - postgresql-contrib
+      - python3-psycopg2
+    state: present
+    update_cache: true
+
+- name: Ensure PostgreSQL is started and enabled
+  ansible.builtin.systemd:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Create database user
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    role_attr_flags: LOGIN
+
+- name: Create application database
+  become_user: postgres
+  community.postgresql.postgresql_db:
+    name: "{{ db_name }}"
+    owner: "{{ db_user }}"
+    encoding: UTF8
+
+- name: Configure PostgreSQL listen address
+  ansible.builtin.lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+    regexp: "^#?listen_addresses"
+    line: "listen_addresses = '{{ ansible_host }}'"
+  notify: restart postgresql
+
+- name: Deploy pg_hba.conf from template
+  ansible.builtin.template:
+    src: pg_hba.conf.j2
+    dest: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: "0640"
+  notify: restart postgresql
+
+- name: Allow PostgreSQL port from worker only (UFW)
+  community.general.ufw:
+    rule: allow
+    port: "{{ db_port }}"
+    proto: tcp
+    src: "{{ hostvars[groups['workers'][0]]['ansible_host'] }}"
+
+- name: Deny PostgreSQL port from everywhere else (UFW)
+  community.general.ufw:
+    rule: deny
+    port: "{{ db_port }}"
+    proto: tcp
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+    policy: allow

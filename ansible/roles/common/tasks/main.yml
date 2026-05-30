@@ -1,0 +1,34 @@
+---
+- name: Ensure /home/student directory exists
+  ansible.builtin.file:
+    path: /home/student
+    state: directory
+    mode: "0755"
+
+- name: Create gradebook file with student number
+  ansible.builtin.copy:
+    dest: /home/student/gradebook
+    content: "13\n"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Ensure ansible user has passwordless sudo
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/ansible
+    content: "ansible ALL=(ALL) NOPASSWD:ALL\n"
+    mode: "0440"
+    validate: "visudo -cf %s"
+
+- name: Ensure teacher has sudo with password
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/teacher
+    content: "teacher ALL=(ALL:ALL) ALL\n"
+    mode: "0440"
+    validate: "visudo -cf %s"
+
+- name: Set teacher password
+  ansible.builtin.user:
+    name: teacher
+    password: "{{ '12345678' | password_hash('sha512') }}"
+    update_password: always
