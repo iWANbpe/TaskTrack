@@ -31,4 +31,4 @@
   ansible.builtin.user:
     name: teacher
     password: "{{ '12345678' | password_hash('sha512') }}"
-    update_password: always
+    update_password: on_create
