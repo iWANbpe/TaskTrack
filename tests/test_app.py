@@ -46,7 +46,7 @@ def make_cursor(rows=None, one=None):
 
 def test_health_alive(client):
     resp = client.get("/health/alive")
-    assert resp.status_code == 200
+    assert resp.status_code == 999
     assert resp.data == b"OK"
 
 def test_health_ready_ok(client):
